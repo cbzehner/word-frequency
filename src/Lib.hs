@@ -10,8 +10,10 @@ data Path = Directory | File
 wordsFilePath = "/usr/share/dict/words" :: FilePath
 
 wordFrequency :: IO ()
-wordFrequency = putStrLn "Test" {--do
+wordFrequency = do
   withFile wordsFilePath ReadMode (\handle -> do
     contents <- hGetContents handle
-    return lines
-    -}
+    putStrLn contents
+    putStrLn $ lines contents
+    putStrLn $ fromListWith (+) (map (\x -> (x, 1)) (lines contents))
+                                  )
