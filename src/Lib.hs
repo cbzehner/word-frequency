@@ -7,13 +7,16 @@ import System.IO (hGetContents, IOMode(..), withFile)
 
 data Path = Directory | File
 
-wordsFilePath = "/usr/share/dict/words" :: FilePath
-
-wordFrequency :: IO ()
-wordFrequency = do
-  withFile wordsFilePath ReadMode (\handle -> do
+wordFrequency :: [FilePath] -> Int -> Int -> IO ()
+wordFrequency files minWordLength minCount = do
+  withFile (head files) ReadMode (\handle -> do
     contents <- hGetContents handle
-    -- TODO: use filterWithKey to filter both short words and low word counts
-    putStrLn $ unlines $ map (\(k, v) -> k ++ ": " ++ show v) $ HashMap.toList $
+    -- TODO: order probably matters here. Maybe an ordered rather than
+    -- unordered data structure will make more sense? Maybe just order after
+    -- filtering?
+    putStrLn $ unlines $
+      map (\(k, v) -> k ++ ": " ++ show v) $ HashMap.toList $
+      HashMap.filterWithKey (\k v -> length k >= minWordLength && v >= minCount) $
       HashMap.fromListWith (+) (map (\x -> (x, 1)) (lines contents))
+
                                   )
