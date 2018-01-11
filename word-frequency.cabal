@@ -2,17 +2,17 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5166e5b845fc5259e87509e350e906d15e026853297c025e7cf9bb27d35fe08c
+-- hash: b14431be2b356370b7d1d9aaaeed7498f8cde438e0296bb00b2e2aedc10122fd
 
 name:           word-frequency
 version:        0.1.0.0
-description:    Please see the README on Github at <https://github.com/githubuser/word-frequency#readme>
-homepage:       https://github.com/githubuser/word-frequency#readme
-bug-reports:    https://github.com/githubuser/word-frequency/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
-license:        BSD3
+description:    Please see the README on Github at <https://github.com/cbzehner/word-frequency#readme>
+homepage:       https://github.com/cbzehner/word-frequency#readme
+bug-reports:    https://github.com/cbzehner/word-frequency/issues
+author:         Chris Zehner
+maintainer:     cbzehner@gmail.com
+copyright:      2018 Chris Zehner
+license:        GPL
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
@@ -23,13 +23,14 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/word-frequency
+  location: https://github.com/cbzehner/word-frequency
 
 library
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , unordered-containers
   exposed-modules:
       Lib
   other-modules:
@@ -43,6 +44,7 @@ executable word-frequency-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , unordered-containers
     , word-frequency
   other-modules:
       Paths_word_frequency
@@ -56,6 +58,7 @@ test-suite word-frequency-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , unordered-containers
     , word-frequency
   other-modules:
       Paths_word_frequency
