@@ -2,6 +2,7 @@
 Count the frequency of words in a file or directory.
 
 # Usage
+```
 word-frequency - counting manually is overrated
 
 Usage: word-frequency-exe (-p|--path TARGET) [-l|--length INT] [-c|--count INT]
@@ -15,6 +16,7 @@ Available options:
                            be included.
   --top                    Display only the top 10 results.
   -h,--help                Show this help text
+```
 
 # Build Instructions
 1. Clone this repository with `git clone`
