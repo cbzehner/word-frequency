@@ -23,5 +23,5 @@ Available options:
 2. Run `stack build`
 3. Follow usage above or use `stack exec word-frequency-exe -- TARGET`
 
-# Why
+# Motivation
 The very first script I ever wrote was a Python script to parse source code for frequently used variables. `word-frequency` is a Haskell homage to this original script.

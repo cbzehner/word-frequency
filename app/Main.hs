@@ -1,19 +1,14 @@
 module Main where
 
-{- TODO:
-    implement Top 10 functionality
-    Handle recursing directories
--}
-
-{-- External Packages --}
-import Control.Monad (unless)
+-- External Packages
+import Control.Monad (unless, when)
 import Options.Applicative
 import Data.Semigroup ((<>))
 import System.Console.GetOpt
+import System.Directory (doesDirectoryExist, doesFileExist)
 import System.Exit
-import System.FilePath (isValid)
 
-{-- Internal Packages --}
+-- Internal Packages
 import Lib
 
 data Options = Options
@@ -37,10 +32,21 @@ main = entryPoint =<< execParser options
 -- TODO: A better name
 entryPoint :: Options -> IO ()
 entryPoint (Options path length frequency top) = do
-  unless (isValid path) exitFailure
-  wordFrequency files length frequency
-  where
-    files = [path] -- TODO: Handle recursing directories into a [FilePath]
+  pathType <- getPathType path
+  -- TODO: Better error message on invalid paths
+  when (pathType == Invalid) exitFailure
+  wordFrequency path pathType length frequency top
+  exitSuccess
+
+getPathType :: FilePath -> IO PathType
+getPathType path = do
+  directoryExists <- doesDirectoryExist path
+  fileExists <- doesFileExist path
+  if directoryExists
+  then pure Directory
+  else if fileExists
+       then pure File
+       else pure Invalid
 
 parseOptions :: Parser Options
 parseOptions = Options

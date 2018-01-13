@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e7738eb2e6012ea8aa06b9b244c3b4a75ac9afc566e1ead548269c61d4feb39d
+-- hash: 3b572f946b50a338ed3de9cd424d6dd6f849b9cfaac73396f1ec17ca0ccd4513
 
 name:           word-frequency
 version:        0.1.0.0
@@ -30,7 +30,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , filepath
+    , directory
     , optparse-applicative
     , unordered-containers
   exposed-modules:
@@ -46,7 +46,7 @@ executable word-frequency-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , filepath
+    , directory
     , optparse-applicative
     , unordered-containers
     , word-frequency
@@ -62,7 +62,7 @@ test-suite word-frequency-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , filepath
+    , directory
     , optparse-applicative
     , unordered-containers
     , word-frequency

@@ -1,19 +1,22 @@
 module Lib
     ( wordFrequency
+    , PathType(..)
     ) where
 
 import qualified Data.HashMap.Strict as HM
 import System.IO (hGetContents, IOMode(..), withFile)
 
-data Path = Directory | File
+data PathType = Directory | File | Invalid
+  deriving (Eq, Ord, Show, Enum)
 
 {-- TODO:
-   Support multiple files
+   Support multiple files inside a directory
    Order results by count for printing in DESC order
+   Support Top results only
 -}
-wordFrequency :: [FilePath] -> Int -> Int -> IO ()
-wordFrequency files wordLength frequency =
-  withFile (head files) ReadMode (\handle -> do
+wordFrequency :: FilePath -> PathType -> Int -> Int -> Bool -> IO ()
+wordFrequency path pathType wordLength frequency top =
+  withFile path ReadMode (\handle -> do
     contents <- hGetContents handle
     putStrLn $ unlines $ map tupleToStr $ HM.toList $
       filterWordsMap wordLength frequency $
