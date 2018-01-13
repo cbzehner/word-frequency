@@ -9,15 +9,14 @@ data Path = Directory | File
 
 {-- TODO:
    Support multiple files
-   Add command line arguments
    Order results by count for printing in DESC order
 -}
 wordFrequency :: [FilePath] -> Int -> Int -> IO ()
-wordFrequency files minWordLength minCount =
+wordFrequency files wordLength frequency =
   withFile (head files) ReadMode (\handle -> do
     contents <- hGetContents handle
     putStrLn $ unlines $ map tupleToStr $ HM.toList $
-      filterWordsMap minWordLength minCount $
+      filterWordsMap wordLength frequency $
       fileToWordsMap (lines contents)
                                  )
 
@@ -28,5 +27,5 @@ fileToWordsMap :: [String] -> HM.HashMap String Int
 fileToWordsMap list = HM.fromListWith (+) $ map (\x -> (x, 1)) list
 
 filterWordsMap :: Int -> Int -> HM.HashMap String Int -> HM.HashMap String Int
-filterWordsMap minWordLength minCount =
-  HM.filterWithKey (\k v -> length k >= minWordLength && v >= minCount)
+filterWordsMap wordLength frequency =
+  HM.filterWithKey (\k v -> length k >= wordLength && v >= frequency)

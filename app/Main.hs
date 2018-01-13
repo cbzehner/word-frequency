@@ -19,7 +19,7 @@ import Lib
 data Options = Options
   { path :: FilePath
   , length :: Int
-  , count :: Int
+  , frequency :: Int
   , top10 :: Bool
   } deriving (Show)
 
@@ -36,18 +36,16 @@ main = entryPoint =<< execParser options
 
 -- TODO: A better name
 entryPoint :: Options -> IO ()
-entryPoint (Options path length count top) = do
+entryPoint (Options path length frequency top) = do
   unless (isValid path) exitFailure
-  wordFrequency files length count
+  wordFrequency files length frequency
   where
     files = [path] -- TODO: Handle recursing directories into a [FilePath]
 
 parseOptions :: Parser Options
 parseOptions = Options
-  <$> strOption -- See if you can use this as the default arg if no flags are passed in
-    (  long "path"
-    <> short 'p'
-    <> metavar "TARGET"
+  <$> argument str
+    (  metavar "TARGET"
     <> help "The file or directory to count words for."
     )
   <*> option auto
@@ -56,11 +54,11 @@ parseOptions = Options
     <> value 4 -- includes 97% of all English words
     <> showDefault
     <> metavar "INT"
-    <> help "The minimum length of words to include."
+    <> help "The minimum length of words to include. It's often useful to omit prepositions."
     )
   <*> option auto
-    (  long "count"
-    <> short 'c'
+    (  long "frequency"
+    <> short 'f'
     <> value 1
     <> metavar "INT"
     <> help "The minimum number of occurences a word must have to be included."
