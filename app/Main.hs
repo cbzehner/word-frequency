@@ -1,12 +1,9 @@
 module Main where
 
 -- External Packages
-import Control.Monad (unless, when)
 import Options.Applicative
 import Data.Semigroup ((<>))
 import System.Console.GetOpt
-import System.Directory (doesDirectoryExist, doesFileExist)
-import System.Exit
 
 -- Internal Packages
 import Lib
@@ -32,21 +29,7 @@ main = entryPoint =<< execParser options
 -- TODO: A better name
 entryPoint :: Options -> IO ()
 entryPoint (Options path length frequency top) = do
-  pathType <- getPathType path
-  -- TODO: Better error message on invalid paths
-  when (pathType == Invalid) exitFailure
-  wordFrequency path pathType length frequency top
-  exitSuccess
-
-getPathType :: FilePath -> IO PathType
-getPathType path = do
-  directoryExists <- doesDirectoryExist path
-  fileExists <- doesFileExist path
-  if directoryExists
-  then pure Directory
-  else if fileExists
-       then pure File
-       else pure Invalid
+  wordFrequency path length frequency top
 
 parseOptions :: Parser Options
 parseOptions = Options
