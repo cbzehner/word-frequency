@@ -21,7 +21,6 @@ description:         Please see the README on Github at <https://github.com/cbze
 
 dependencies:
 - base >= 4.7 && < 5
-- directory
 - filepath
 - optparse-applicative
 - unordered-containers
