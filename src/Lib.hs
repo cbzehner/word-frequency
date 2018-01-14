@@ -2,14 +2,10 @@ module Lib
     ( wordFrequency
     ) where
 
-import Control.Monad (when)
 import qualified Data.HashMap.Strict as HM
-import System.Directory (doesDirectoryExist, doesFileExist)
 import System.IO (hGetContents, IOMode(..), withFile)
-import System.Exit
 
-data PathType = Directory | File | Invalid
-  deriving (Eq, Ord, Show, Enum)
+import Files
 
 {-- TODO:
    Support multiple files inside a directory
@@ -18,30 +14,13 @@ data PathType = Directory | File | Invalid
 -}
 wordFrequency :: FilePath -> Int -> Int -> Bool -> IO ()
 wordFrequency path wordLength frequency top = do
-  files <- getFiles path
+  files <- getFilesRecursively path
   withFile (head files) ReadMode (\handle -> do
     contents <- hGetContents handle
     putStrLn $ unlines $ map tupleToStr $ HM.toList $
       filterWordsMap wordLength frequency $
       fileToWordsMap (lines contents)
                                  )
-getFiles :: FilePath -> IO [FilePath]
-getFiles path = do
-  pathType <- getPathType path
-  case pathType of
-    Invalid -> exitFailure -- TODO: Better error message on invalid paths
-    File -> pure [path]
-    Directory -> pure [path, path] -- TODO: Write a recursive funciton to get directory contents
-
-getPathType :: FilePath -> IO PathType
-getPathType path = do
-  directoryExists <- doesDirectoryExist path
-  fileExists <- doesFileExist path
-  if directoryExists
-  then pure Directory
-  else if fileExists
-       then pure File
-       else pure Invalid
 
 tupleToStr :: (Show v) => (String, v) -> String
 tupleToStr (k, v) = k ++ ": " ++ show v
