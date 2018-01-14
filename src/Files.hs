@@ -2,6 +2,7 @@ module Files
   ( getFilesRecursively
   ) where
 
+import Control.Monad (join, mapM)
 import System.Directory (doesDirectoryExist, doesFileExist, listDirectory)
 import System.Exit
 import System.FilePath (combine)
@@ -15,21 +16,11 @@ getFilesRecursively path = do
   case pathType of
     Invalid -> exitFailure -- TODO: Better error message on invalid paths
     File -> pure [path]
-    Directory -> pure [path, path] -- TODO: Write a recursive function to get directory contents
+    Directory -> fmap concat $ join $ mapM getFilesRecursively <$> getFilesFromDirectory path
 
 getFilesFromDirectory :: FilePath -> IO [FilePath]
 getFilesFromDirectory path = map (combine path) <$> listDirectory path
 
-{-
-getFileTypeTuple :: FilePath -> IO (FilePath, PathType)
-getFileTypeTuple path =
-  fmap (map (\p -> do
-    pathType <- getPathType
-    (p, pathType)))
-    (getFilesFromDirectory path)
-    -}
-
-getPathType :: FilePath -> IO PathType
 getPathType path = do
   directoryExists <- doesDirectoryExist path
   fileExists <- doesFileExist path
