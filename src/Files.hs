@@ -1,3 +1,4 @@
+-- Look into switching from a home rolled solution to directory-tree
 module Files
   ( getFilesRecursively
   ) where

@@ -28,8 +28,7 @@ main = entryPoint =<< execParser options
 
 -- TODO: A better name
 entryPoint :: Options -> IO ()
-entryPoint (Options path length frequency top) = do
-  wordFrequency path length frequency top
+entryPoint (Options path length frequency top) = wordFrequency path length frequency top
 
 parseOptions :: Parser Options
 parseOptions = Options

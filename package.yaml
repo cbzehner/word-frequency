@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - directory
 - filepath
+- hashable
 - optparse-applicative
 - unordered-containers
 
