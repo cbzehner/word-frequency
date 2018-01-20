@@ -1,6 +1,9 @@
--- Look into switching from a home rolled solution to directory-tree
-module Files
-  ( getFilesRecursively
+-- TODO:
+--       Handle relative file paths by making them absolute.
+--       Look at Real World Haskell suggestions for how to improve this.
+--       Look into switching from a home rolled solution to directory-tree
+module System.Directory.Recursive
+  ( findAllFileNames
   ) where
 
 import Control.Monad (join, mapM)
@@ -11,13 +14,13 @@ import System.FilePath (combine)
 data PathType = Directory | File | Invalid
   deriving (Eq, Ord, Show, Enum)
 
-getFilesRecursively :: FilePath -> IO [FilePath]
-getFilesRecursively path = do
+findAllFileNames :: FilePath -> IO [FilePath]
+findAllFileNames path = do
   pathType <- getPathType path
   case pathType of
     Invalid -> exitFailure -- TODO: Better error message on invalid paths
     File -> pure [path]
-    Directory -> fmap concat $ join $ mapM getFilesRecursively <$> getFilesFromDirectory path
+    Directory -> fmap concat $ join $ mapM findAllFileNames <$> getFilesFromDirectory path
 
 getFilesFromDirectory :: FilePath -> IO [FilePath]
 getFilesFromDirectory path = map (combine path) <$> listDirectory path

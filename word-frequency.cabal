@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 912cc129767c64adecb7c63695cb2af955b947dd5caf9bf7c20acd2fbc86797a
+-- hash: 61bc22c0cecfccc6381e73669ed661f435e0b6c4f0bd2563fb4792c10cb60675
 
 name:           word-frequency
 version:        0.1.0.0
@@ -36,8 +36,8 @@ library
     , optparse-applicative
     , unordered-containers
   exposed-modules:
-      Files
       Lib
+      System.Directory.Recursive
   other-modules:
       Paths_word_frequency
   default-language: Haskell2010

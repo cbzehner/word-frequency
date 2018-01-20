@@ -8,7 +8,7 @@ import qualified Data.List as L
 import System.IO (hGetContents, IOMode(..), withFile)
 import Data.Hashable (Hashable)
 
-import Files
+import System.Directory.Recursive (findAllFileNames)
 
 {-- TODO:
    Order results by count for printing in DESC order
@@ -16,7 +16,7 @@ import Files
 -}
 wordFrequency :: FilePath -> Int -> Int -> Bool -> IO ()
 wordFrequency path wordLength frequency top = do
-  files <- getFilesRecursively path
+  files <- findAllFileNames path
   wordsMap <- readWordsMaps files
   putStrLn $ unlines $ map tupleToStr $ HM.toList $
     filterWordsMap wordLength frequency wordsMap
