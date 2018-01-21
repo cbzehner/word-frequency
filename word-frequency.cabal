@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 61bc22c0cecfccc6381e73669ed661f435e0b6c4f0bd2563fb4792c10cb60675
+-- hash: cf081fa53117df1e39e4f2a19c2077b14b900c8f9837393a13da1a9d0255ebde
 
 name:           word-frequency
-version:        0.1.0.0
+version:        1.0.0.0
 description:    Please see the README on Github at <https://github.com/cbzehner/word-frequency#readme>
 homepage:       https://github.com/cbzehner/word-frequency#readme
 bug-reports:    https://github.com/cbzehner/word-frequency/issues
@@ -32,7 +32,6 @@ library
       base >=4.7 && <5
     , directory
     , filepath
-    , hashable
     , optparse-applicative
     , unordered-containers
   exposed-modules:
@@ -51,7 +50,6 @@ executable word-frequency-exe
       base >=4.7 && <5
     , directory
     , filepath
-    , hashable
     , optparse-applicative
     , unordered-containers
     , word-frequency
@@ -69,7 +67,6 @@ test-suite word-frequency-test
       base >=4.7 && <5
     , directory
     , filepath
-    , hashable
     , optparse-applicative
     , unordered-containers
     , word-frequency

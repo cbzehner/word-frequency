@@ -1,5 +1,5 @@
 name:                word-frequency
-version:             0.1.0.0
+version:             1.0.0.0
 github:              "cbzehner/word-frequency"
 license:             GPL
 author:              "Chris Zehner"
@@ -23,7 +23,6 @@ dependencies:
 - base >= 4.7 && < 5
 - directory
 - filepath
-- hashable
 - optparse-applicative
 - unordered-containers
 
