@@ -2,60 +2,39 @@ module Lib
     ( wordFrequency
     ) where
 
-import Control.Monad (join)
+import Control.Monad (forM)
 import qualified Data.HashMap.Strict as HM
-import qualified Data.List as L
-import System.IO (hGetContents, IOMode(..), withFile)
-import Data.Hashable (Hashable)
 
 import System.Directory.Recursive (findAllFileNames)
 
 {-- TODO:
    Order results by count for printing in DESC order
    Support Top results only
+   Write tests and integrate with Stack
+   Test on Windows (developed on OSX)
+   Convert to ByteString instead of String (and profile)
 -}
+
+-- | Get the count of words in a file or recursively in a directory.
 wordFrequency :: FilePath -> Int -> Int -> Bool -> IO ()
 wordFrequency path wordLength frequency top = do
   files <- findAllFileNames path
-  wordsMap <- readWordsMaps files
-  putStrLn $ unlines $ map tupleToStr $ HM.toList $
-    filterWordsMap wordLength frequency wordsMap
-  {-
-  withFile (head files) ReadMode (\handle -> do
-    contents <- hGetContents handle
-    putStrLn $ unlines $ map tupleToStr $ HM.toList $
-      filterWordsMap wordLength frequency $
-      fileToWordsMap (lines contents))
-    -}
-  {-
-  putStrLn $ unlines $ map tupleToStr $ HM.toList $
-    filterWordsMap wordLength frequency $ readWordsMaps files
-    -}
-
-
-unionsWith :: (Eq k, Hashable k) => (v -> v -> v) -> [HM.HashMap k v] -> HM.HashMap k v
-unionsWith f = L.foldl' (HM.unionWith f) HM.empty
+  filesContents <- forM files readFile
+  printWords . backToTuples . filterWordsMap wordLength frequency $
+    createWordsMap filesContents
+  where
+    printWords tuples = putStrLn $ unlines tuples
+    backToTuples words = map tupleToStr $ HM.toList words
+    createWordsMap filesText = wordsCountMap $ lines $ concat filesText
 
 -- | Take in a list of words and transform it into a HashMap of words to counts.
-fileToWordsMap :: [String] -> HM.HashMap String Int
-fileToWordsMap list = HM.fromListWith (+) $ map (\x -> (x, 1)) list
+wordsCountMap :: [String] -> HM.HashMap String Int
+wordsCountMap list = HM.fromListWith (+) $ map (\x -> (x, 1)) list
 
 -- | Filter a HashMap of words by key length and count of values.
 filterWordsMap :: Int -> Int -> HM.HashMap String Int -> HM.HashMap String Int
 filterWordsMap wordLength frequency =
   HM.filterWithKey (\k v -> length k >= wordLength && v >= frequency)
-
--- | Fetch a HashMap of words to counts for a list of FilePaths.
-readWordsMaps :: [FilePath] -> IO (HM.HashMap String Int)
-readWordsMaps files = do
-  wordsMaps <- mapM readWordsMap files
-  pure $ unionsWith (+) wordsMaps
-
--- | Read a file and return a HashMap of the count of words in the file.
-readWordsMap :: FilePath -> IO (HM.HashMap String Int)
-readWordsMap file = withFile file ReadMode (\handle -> do
-    contents <- hGetContents handle
-    pure $ fileToWordsMap (lines contents))
 
 -- | A helper function to `Show` the tuple representation as a string.
 tupleToStr :: (Show v) => (String, v) -> String
