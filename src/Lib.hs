@@ -10,9 +10,9 @@ import System.Directory.Recursive (findAllFileNames)
 {-- TODO:
    Order results by count for printing in DESC order
    Support Top results only
-   Write tests and integrate with Stack
+   Write HSpec tests
    Test on Windows (developed on OSX)
-   Convert to ByteString instead of String (and profile)
+   Convert to ByteString instead of String (and profile performance)
 -}
 
 -- | Get the count of words in a file or recursively in a directory.
@@ -21,11 +21,11 @@ wordFrequency path wordLength frequency top = do
   files <- findAllFileNames path
   filesContents <- forM files readFile
   printWords . backToTuples . filterWordsMap wordLength frequency $
-    createWordsMap filesContents
+    wordsCountMap $ getWordsList filesContents
   where
-    printWords tuples = putStrLn $ unlines tuples
     backToTuples words = map tupleToStr $ HM.toList words
-    createWordsMap filesText = wordsCountMap $ lines $ concat filesText
+    getWordsList filesText = concatMap words $ lines $ concat filesText
+    printWords tuples = putStrLn $ unlines tuples
 
 -- | Take in a list of words and transform it into a HashMap of words to counts.
 wordsCountMap :: [String] -> HM.HashMap String Int
